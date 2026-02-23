@@ -573,7 +573,7 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-icon">?</div>
+        <div class="header-icon">馃浀</div>
         <h1>SERVICIOS DELIVERY</h1>
     </header>
 
@@ -641,24 +641,24 @@
         <div class="map-section">
             <div class="map-header">
                 <i class="fas fa-map-marked-alt"></i>
-                Mapa de Navegación
+                Mapa de Navegaci贸n
             </div>
             <div id="map"></div>
             <div class="map-controls">
                 <div class="search-box">
-                    <input type="text" class="search-input" id="addressSearch" placeholder="Buscar dirección de entrega...">
+                    <input type="text" class="search-input" id="addressSearch" placeholder="Buscar direcci贸n de entrega...">
                     <button class="search-btn" onclick="searchAddress()">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
                 <button class="btn btn-secondary" onclick="locateUser()">
                     <i class="fas fa-location-arrow"></i>
-                    Mi Ubicación Actual
+                    Mi Ubicaci贸n Actual
                 </button>
                 <div id="routeDetails" class="route-info" style="display: none;">
                     <div class="route-info-title">
                         <i class="fas fa-info-circle"></i>
-                        Información de Ruta
+                        Informaci贸n de Ruta
                     </div>
                     <div class="route-info-text" id="routeText"></div>
                 </div>
@@ -675,7 +675,7 @@
                 <div class="empty-state">
                     <i class="fas fa-box-open"></i>
                     <p>No hay entregas registradas</p>
-                    <p style="font-size: 0.9rem; margin-top: 10px;">?Comienza agregando tu primera entrega!</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">隆Comienza agregando tu primera entrega!</p>
                 </div>
             </div>
         </div>
@@ -688,7 +688,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <div class="modal-title" id="modalTitle">Confirmar</div>
-            <div class="modal-text" id="modalText">?Estás seguro?</div>
+            <div class="modal-text" id="modalText">驴Est谩s seguro?</div>
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
                 <button class="modal-btn confirm" id="modalConfirm">Eliminar</button>
@@ -707,7 +707,7 @@
         let deliveries = JSON.parse(localStorage.getItem('deliveries')) || [];
         let deleteId = null;
 
-        // Inicialización
+        // Inicializaci贸n
         document.addEventListener('DOMContentLoaded', function() {
             initMap();
             loadDeliveries();
@@ -721,15 +721,15 @@
 
         // Inicializar Mapa
         function initMap() {
-            // Coordenadas por defecto (Ciudad de México como ejemplo, se ajustará a la ubicación del usuario)
+            // Coordenadas por defecto (Ciudad de M茅xico como ejemplo, se ajustar谩 a la ubicaci贸n del usuario)
             map = L.map('map').setView([19.4326, -99.1332], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '? OpenStreetMap contributors',
+                attribution: '漏 OpenStreetMap contributors',
                 maxZoom: 19
             }).addTo(map);
 
-            // Intentar obtener ubicación del usuario
+            // Intentar obtener ubicaci贸n del usuario
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -739,21 +739,21 @@
                         
                         L.marker([lat, lng])
                             .addTo(map)
-                            .bindPopup('? Tu ubicación actual')
+                            .bindPopup('馃搷 Tu ubicaci贸n actual')
                             .openPopup();
                     },
                     function() {
-                        showToast('No se pudo obtener tu ubicación', 'error');
+                        showToast('No se pudo obtener tu ubicaci贸n', 'error');
                     }
                 );
             }
         }
 
-        // Buscar dirección
+        // Buscar direcci贸n
         async function searchAddress() {
             const query = document.getElementById('addressSearch').value;
             if (!query) {
-                showToast('Ingresa una dirección', 'error');
+                showToast('Ingresa una direcci贸n', 'error');
                 return;
             }
 
@@ -771,7 +771,7 @@
                     // Agregar marcador
                     const marker = L.marker([lat, lon])
                         .addTo(map)
-                        .bindPopup(`? ${data[0].display_name}`)
+                        .bindPopup(`馃搷 ${data[0].display_name}`)
                         .openPopup();
                     
                     markers.push(marker);
@@ -780,9 +780,9 @@
                     // Guardar coordenadas para ruta
                     window.destinationCoords = [lat, lon];
                     
-                    showToast('Ubicación encontrada', 'success');
+                    showToast('Ubicaci贸n encontrada', 'success');
                     
-                    // Si hay ubicación actual, trazar ruta
+                    // Si hay ubicaci贸n actual, trazar ruta
                     if (navigator.geolocation) {
                         navigator.geCurrentPosition(
                             function(position) {
@@ -794,10 +794,10 @@
                         );
                     }
                 } else {
-                    showToast('Dirección no encontrada', 'error');
+                    showToast('Direcci贸n no encontrada', 'error');
                 }
             } catch (error) {
-                showToast('Error al buscar dirección', 'error');
+                showToast('Error al buscar direcci贸n', 'error');
             }
         }
 
@@ -808,7 +808,7 @@
                 map.removeLayer(currentRoute);
             }
 
-            // Crear línea de ruta
+            // Crear l铆nea de ruta
             currentRoute = L.polyline([start, end], {
                 color: '#FF6B35',
                 weight: 5,
@@ -823,7 +823,7 @@
             
             routeText.innerHTML = `
                 <strong>Distancia:</strong> ${distance.toFixed(2)} km<br>
-                <strong>Tiempo estimado:</strong> ${Math.ceil(distance * 3)} minutos (en vehículo)
+                <strong>Tiempo estimado:</strong> ${Math.ceil(distance * 3)} minutos (en veh铆culo)
             `;
             routeDetails.style.display = 'block';
             
@@ -831,7 +831,7 @@
             map.fitBounds(currentRoute.getBounds(), { padding: [50, 50] });
         }
 
-        // Calcular distancia (fórmula de Haversine)
+        // Calcular distancia (f贸rmula de Haversine)
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; // Radio de la Tierra en km
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -860,17 +860,17 @@
                         
                         L.marker([lat, lng])
                             .addTo(map)
-                            .bindPopup('? Tu ubicación')
+                            .bindPopup('馃搷 Tu ubicaci贸n')
                             .openPopup();
                             
-                        showToast('Ubicación actualizada', 'success');
+                        showToast('Ubicaci贸n actualizada', 'success');
                     },
                     function() {
-                        showToast('Error al obtener ubicación', 'error');
+                        showToast('Error al obtener ubicaci贸n', 'error');
                     }
                 );
             } else {
-                showToast('Geolocalización no soportada', 'error');
+                showToast('Geolocalizaci贸n no soportada', 'error');
             }
         }
 
@@ -899,9 +899,9 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('fecha').value = now.toISOString().slice(0,16);
             
-            showToast('?Entrega guardada exitosamente!', 'success');
+            showToast('隆Entrega guardada exitosamente!', 'success');
             
-            // Buscar automáticamente la dirección de entrega en el mapa
+            // Buscar autom谩ticamente la direcci贸n de entrega en el mapa
             document.getElementById('addressSearch').value = delivery.entrega;
             searchAddress();
         });
@@ -915,13 +915,13 @@
                     <div class="empty-state">
                         <i class="fas fa-box-open"></i>
                         <p>No hay entregas registradas</p>
-                        <p style="font-size: 0.9rem; margin-top: 10px;">?Comienza agregando tu primera entrega!</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">隆Comienza agregando tu primera entrega!</p>
                     </div>
                 `;
                 return;
             }
             
-            // Ordenar por fecha (más reciente primero)
+            // Ordenar por fecha (m谩s reciente primero)
             const sorted = deliveries.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
             
             list.innerHTML = sorted.map(d => {
@@ -969,11 +969,11 @@
             document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Confirmar eliminación
+        // Confirmar eliminaci贸n
         function confirmDelete(id) {
             deleteId = id;
             document.getElementById('modalTitle').textContent = 'Eliminar Entrega';
-            document.getElementById('modalText').textContent = '?Estás seguro de que deseas eliminar esta entrega? Esta acción no se puede deshacer.';
+            document.getElementById('modalText').textContent = '驴Est谩s seguro de que deseas eliminar esta entrega? Esta acci贸n no se puede deshacer.';
             document.getElementById('modal').classList.add('active');
             
             document.getElementById('modalConfirm').onclick = function() {
@@ -1002,7 +1002,7 @@
             localStorage.setItem('deliveries', JSON.stringify(deliveries));
         }
 
-        // Actualizar estadísticas
+        // Actualizar estad铆sticas
         function updateStats() {
             const today = new Date().toDateString();
             const todayDeliveries = deliveries.filter(d => new Date(d.createdAt).toDateString() === today);
