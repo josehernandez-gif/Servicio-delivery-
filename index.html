@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF6B35">
+    <title>SERVICIOS DELIVERY</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E85A2B;
+            --secondary: #004E89;
+            --accent: #1A659E;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --warning: #F39C12;
+            --light: #F8F9FA;
+            --dark: #2C3E50;
+            --gray: #95A5A6;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        
+        .header-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-title {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--primary);
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .input-icon .form-input {
+            padding-left: 45px;
+        }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,53,0.4);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 10px rgba(255,107,53,0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        
+        /* Map Section */
+        .map-section {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .map-header {
+            background: var(--secondary);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #map {
+            height: 400px;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .map-controls {
+            padding: 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .search-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        /* Delivery List */
+        .delivery-list {
+            margin-top: 20px;
+        }
+        
+        .delivery-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary);
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .delivery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,107,53,0.1));
+            pointer-events: none;
+        }
+        
+        .delivery-date {
+            background: var(--primary);
+            color: white;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .delivery-route {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .delivery-route i {
+            color: var(--primary);
+        }
+        
+        .route-arrow {
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+        
+        .delivery-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-small {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .btn-map {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #fee;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--dark);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background: var(--success);
+        }
+        
+        .toast.error {
+            background: var(--danger);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            animation: scaleIn 0.3s;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .modal-text {
+            color: var(--gray);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .modal-btn.cancel {
+            background: #eee;
+            color: var(--dark);
+        }
+        
+        .modal-btn.confirm {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Route Info */
+        .route-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .route-info-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .route-info-text {
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            #map {
+                height: 350px;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-icon">?</div>
+        <h1>SERVICIOS DELIVERY</h1>
+    </header>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDeliveries">0</div>
+                <div class="stat-label">Entregas Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingDeliveries">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-plus-circle"></i>
+                Nueva Entrega
+            </h2>
+            
+            <form id="deliveryForm">
+                <div class="form-group">
+                    <label class="form-label">Fecha y Hora</label>
+                    <div class="input-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="datetime-local" class="form-input" id="fecha" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Lugar de Retiro</label>
+                    <div class="input-icon">
+                        <i class="fas fa-store"></i>
+                        <input type="text" class="form-input" id="retiro" placeholder="Ej: Restaurante Central, Av. Principal 123" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Lugar de Entrega</label>
+                    <div class="input-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" class="form-input" id="entrega" placeholder="Ej: Torre A, Apartamento 502" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notas Adicionales (Opcional)</label>
+                    <div class="input-icon">
+                        <i class="fas fa-sticky-note"></i>
+                        <input type="text" class="form-input" id="notas" placeholder="Instrucciones especiales...">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Guardar Entrega
+                </button>
+            </form>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div class="map-header">
+                <i class="fas fa-map-marked-alt"></i>
+                Mapa de Navegaci車n
+            </div>
+            <div id="map"></div>
+            <div class="map-controls">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="addressSearch" placeholder="Buscar direcci車n de entrega...">
+                    <button class="search-btn" onclick="searchAddress()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="locateUser()">
+                    <i class="fas fa-location-arrow"></i>
+                    Mi Ubicaci車n Actual
+                </button>
+                <div id="routeDetails" class="route-info" style="display: none;">
+                    <div class="route-info-title">
+                        <i class="fas fa-info-circle"></i>
+                        Informaci車n de Ruta
+                    </div>
+                    <div class="route-info-text" id="routeText"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deliveries List -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-list"></i>
+                Mis Entregas
+            </h2>
+            <div id="deliveriesList" class="delivery-list">
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>No hay entregas registradas</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">?Comienza agregando tu primera entrega!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle">Confirmar</div>
+            <div class="modal-text" id="modalText">?Est芍s seguro?</div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn confirm" id="modalConfirm">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Variables globales
+        let map;
+        let markers = [];
+        let currentRoute = null;
+        let deliveries = JSON.parse(localStorage.getItem('deliveries')) || [];
+        let deleteId = null;
+
+        // Inicializaci車n
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadDeliveries();
+            updateStats();
+            
+            // Establecer fecha actual por defecto
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('fecha').value = now.toISOString().slice(0,16);
+        });
+
+        // Inicializar Mapa
+        function initMap() {
+            // Coordenadas por defecto (Ciudad de M谷xico como ejemplo, se ajustar芍 a la ubicaci車n del usuario)
+            map = L.map('map').setView([19.4326, -99.1332], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '? OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Intentar obtener ubicaci車n del usuario
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        map.setView([lat, lng], 15);
+                        
+                        L.marker([lat, lng])
+                            .addTo(map)
+                            .bindPopup('? Tu ubicaci車n actual')
+                            .openPopup();
+                    },
+                    function() {
+                        showToast('No se pudo obtener tu ubicaci車n', 'error');
+                    }
+                );
+            }
+        }
+
+        // Buscar direcci車n
+        async function searchAddress() {
+            const query = document.getElementById('addressSearch').value;
+            if (!query) {
+                showToast('Ingresa una direcci車n', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    
+                    // Limpiar marcadores anteriores
+                    clearMarkers();
+                    
+                    // Agregar marcador
+                    const marker = L.marker([lat, lon])
+                        .addTo(map)
+                        .bindPopup(`? ${data[0].display_name}`)
+                        .openPopup();
+                    
+                    markers.push(marker);
+                    map.setView([lat, lon], 16);
+                    
+                    // Guardar coordenadas para ruta
+                    window.destinationCoords = [lat, lon];
+                    
+                    showToast('Ubicaci車n encontrada', 'success');
+                    
+                    // Si hay ubicaci車n actual, trazar ruta
+                    if (navigator.geolocation) {
+                        navigator.geCurrentPosition(
+                            function(position) {
+                                drawRoute(
+                                    [position.coords.latitude, position.coords.longitude],
+                                    [lat, lon]
+                                );
+                            }
+                        );
+                    }
+                } else {
+                    showToast('Direcci車n no encontrada', 'error');
+                }
+            } catch (error) {
+                showToast('Error al buscar direcci車n', 'error');
+            }
+        }
+
+        // Trazar ruta
+        function drawRoute(start, end) {
+            // Limpiar ruta anterior
+            if (currentRoute) {
+                map.removeLayer(currentRoute);
+            }
+
+            // Crear l赤nea de ruta
+            currentRoute = L.polyline([start, end], {
+                color: '#FF6B35',
+                weight: 5,
+                opacity: 0.8,
+                dashArray: '10, 10'
+            }).addTo(map);
+
+            // Calcular distancia aproximada
+            const distance = calculateDistance(start[0], start[1], end[0], end[1]);
+            const routeDetails = document.getElementById('routeDetails');
+            const routeText = document.getElementById('routeText');
+            
+            routeText.innerHTML = `
+                <strong>Distancia:</strong> ${distance.toFixed(2)} km<br>
+                <strong>Tiempo estimado:</strong> ${Math.ceil(distance * 3)} minutos (en veh赤culo)
+            `;
+            routeDetails.style.display = 'block';
+            
+            // Ajustar vista para ver toda la ruta
+            map.fitBounds(currentRoute.getBounds(), { padding: [50, 50] });
+        }
+
+        // Calcular distancia (f車rmula de Haversine)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radio de la Tierra en km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Limpiar marcadores
+        function clearMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+        }
+
+        // Localizar usuario
+        function locateUser() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        map.setView([lat, lng], 16);
+                        
+                        L.marker([lat, lng])
+                            .addTo(map)
+                            .bindPopup('? Tu ubicaci車n')
+                            .openPopup();
+                            
+                        showToast('Ubicaci車n actualizada', 'success');
+                    },
+                    function() {
+                        showToast('Error al obtener ubicaci車n', 'error');
+                    }
+                );
+            } else {
+                showToast('Geolocalizaci車n no soportada', 'error');
+            }
+        }
+
+        // Guardar entrega
+        document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const delivery = {
+                id: Date.now(),
+                fecha: document.getElementById('fecha').value,
+                retiro: document.getElementById('retiro').value,
+                entrega: document.getElementById('entrega').value,
+                notas: document.getElementById('notas').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            deliveries.push(delivery);
+            saveDeliveries();
+            loadDeliveries();
+            updateStats();
+            
+            // Limpiar formulario
+            document.getElementById('deliveryForm').reset();
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('fecha').value = now.toISOString().slice(0,16);
+            
+            showToast('?Entrega guardada exitosamente!', 'success');
+            
+            // Buscar autom芍ticamente la direcci車n de entrega en el mapa
+            document.getElementById('addressSearch').value = delivery.entrega;
+            searchAddress();
+        });
+
+        // Cargar entregas
+        function loadDeliveries() {
+            const list = document.getElementById('deliveriesList');
+            
+            if (deliveries.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>No hay entregas registradas</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">?Comienza agregando tu primera entrega!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Ordenar por fecha (m芍s reciente primero)
+            const sorted = deliveries.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+            
+            list.innerHTML = sorted.map(d => {
+                const date = new Date(d.fecha);
+                const dateStr = date.toLocaleDateString('es-ES', { 
+                    weekday: 'short', 
+                    day: 'numeric', 
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                return `
+                    <div class="delivery-item" id="delivery-${d.id}">
+                        <div class="delivery-date">${dateStr}</div>
+                        <div class="delivery-route">
+                            <i class="fas fa-store"></i>
+                            <span>${escapeHtml(d.retiro)}</span>
+                        </div>
+                        <div class="delivery-route">
+                            <i class="fas fa-arrow-down route-arrow"></i>
+                        </div>
+                        <div class="delivery-route">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${escapeHtml(d.entrega)}</span>
+                        </div>
+                        ${d.notas ? `<div style="margin-top: 10px; color: #666; font-size: 0.9rem;"><i class="fas fa-sticky-note"></i> ${escapeHtml(d.notas)}</div>` : ''}
+                        <div class="delivery-actions">
+                            <button class="btn-small btn-map" onclick="viewOnMap('${escapeHtml(d.entrega)}')">
+                                <i class="fas fa-map"></i> Ver Mapa
+                            </button>
+                            <button class="btn-small btn-delete" onclick="confirmDelete(${d.id})">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Ver en mapa
+        function viewOnMap(address) {
+            document.getElementById('addressSearch').value = address;
+            searchAddress();
+            document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Confirmar eliminaci車n
+        function confirmDelete(id) {
+            deleteId = id;
+            document.getElementById('modalTitle').textContent = 'Eliminar Entrega';
+            document.getElementById('modalText').textContent = '?Est芍s seguro de que deseas eliminar esta entrega? Esta acci車n no se puede deshacer.';
+            document.getElementById('modal').classList.add('active');
+            
+            document.getElementById('modalConfirm').onclick = function() {
+                deleteDelivery(deleteId);
+                closeModal();
+            };
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            deleteId = null;
+        }
+
+        // Eliminar entrega
+        function deleteDelivery(id) {
+            deliveries = deliveries.filter(d => d.id !== id);
+            saveDeliveries();
+            loadDeliveries();
+            updateStats();
+            showToast('Entrega eliminada', 'success');
+        }
+
+        // Guardar en localStorage
+        function saveDeliveries() {
+            localStorage.setItem('deliveries', JSON.stringify(deliveries));
+        }
+
+        // Actualizar estad赤sticas
+        function updateStats() {
+            const today = new Date().toDateString();
+            const todayDeliveries = deliveries.filter(d => new Date(d.createdAt).toDateString() === today);
+            
+            document.getElementById('totalDeliveries').textContent = todayDeliveries.length;
+            document.getElementById('pendingDeliveries').textContent = deliveries.filter(d => d.status === 'pending').length;
+        }
+
+        // Mostrar toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Escapar HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Permitir buscar con Enter
+        document.getElementById('addressSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchAddress();
+        });
+    </script>
+</body>
+</html>
